@@ -50,7 +50,7 @@ function Home() {
                             <p className="text-teal-500 font-bold ml-4">Get Photos API</p>
                         </div>
                         <div className="flex justify-end items-end w-full">
-                            <button className=" text-teal-500 border border-teal-500 rounded-md h-10 p-1 mr-6 mb-6 font-bold text-xl hover:bg-teal-500 hover:text-black" onClick={() => { setapi(1); handleclick() }}>
+                            <button className=" text-teal-500 border border-teal-500 rounded-md h-10 p-1 mr-6 mb-6 font-bold text-xl hover:bg-teal-500 hover:text-black" onClick={() => { setapi(3); handleclick() }}>
                                 Interact
                             </button>
                         </div>
@@ -61,7 +61,7 @@ function Home() {
                             <p className="text-teal-500 font-bold ml-4">Post Content API</p>
                         </div>
                         <div className="flex justify-end items-end w-full">
-                            <button className=" text-teal-500 border border-teal-500 rounded-md h-10 p-1 mr-6 mb-6 font-bold text-xl hover:bg-teal-500 hover:text-black" onClick={() => { setapi(1); handleclick() }}>
+                            <button className=" text-teal-500 border border-teal-500 rounded-md h-10 p-1 mr-6 mb-6 font-bold text-xl hover:bg-teal-500 hover:text-black" onClick={() => { setapi(4); handleclick() }}>
                                 Interact
                             </button>
                         </div>

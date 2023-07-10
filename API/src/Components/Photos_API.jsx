@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Form from "./form";
 import axios from 'axios';
+import GridLoader from 'react-spinners/GridLoader';
 
 function Photos() {
   const [images, setImages] = useState([]);
   const [error, setError] = useState(null);
   const [value1, setValue1] = useState('');
   const [value2, setValue2] = useState('');
+  const [loading, setloading] = useState(false);
 
   const handleInputChange1 = (event) => {
     setValue1(event.target.value);
@@ -20,13 +22,14 @@ function Photos() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const accessKey = 'wIpEwo1rLd156HoUn8ncoZsbk1IFSCvcjfLPZEvmEoU';
-    const startIndex = parseInt(value1 - 1);
-    const endIndex = parseInt(value2);
+    // const startIndex = parseInt(value1 - 1);
+    // const endIndex = parseInt(value2);
 
     try {
+      setloading(true);
       const response = await axios.get('https://api.unsplash.com/photos/random', {
         params: {
-          count: endIndex - startIndex, // Number of images to retrieve based on range
+          count: parseInt(value2) - parseInt(value1), // Number of images to retrieve based on range
           client_id: accessKey,
         },
       });
@@ -37,6 +40,8 @@ function Photos() {
       console.error('Error fetching images:', error);
       setImages([]);
       setError('Error fetching images');
+    } finally{
+      setloading(false);
     }
 
     // Clear the input fields
@@ -60,7 +65,12 @@ function Photos() {
           value2={value2}
         />
       </div>
-        {images.length > 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center h-screen">
+        <GridLoader color="teal" size={20} loading={loading} />
+    </div>
+      ) : (
+        images.length > 0 ? (
           <div className="flex justify-center items-center">
             <div className="max-w-7xl mx-auto grid grid-cols-3 gap-4">
               {images.map((imageUrl, index) => (
@@ -73,7 +83,9 @@ function Photos() {
           </div>
         ) : (
           <p>{error ? error : 'Loading images...'}</p>
-        )}
+        )
+      )}
+        
 
       <Outlet />
     </div>

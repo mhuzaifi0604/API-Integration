@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Form from './form';
 import axios from 'axios';
+import DotLoader from "react-spinners/DotLoader";
 
 function Posts() {
     const [posts, setPosts] = useState([]);
@@ -9,6 +10,7 @@ function Posts() {
     const [check, setCheck] = useState(false);
     const [value1, setValue1] = useState('');
     const [value2, setValue2] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleInputChange1 = (event) => {
         setValue1(event.target.value);
@@ -26,6 +28,7 @@ function Posts() {
         const endIndex = parseInt(value2);
 
         try {
+            setLoading(true);
             const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
             const data = response.data;
 
@@ -33,9 +36,12 @@ function Posts() {
             const filteredPosts = data.slice(startIndex, endIndex);
 
             setPosts(filteredPosts);
+            setCheck(false);
         } catch (error) {
             setCheck(true);
             setError(error.message);
+        } finally {
+            setLoading(false);
         }
 
         // Clear the input fields
@@ -49,7 +55,7 @@ function Posts() {
 
     return (
         <div className="bg-black min-h-screen pb-4">
-            <h1 className=" text-teal-500 font-bold font-sans text-center text-3xl">GET API - Posts Data</h1>
+            <h1 className="text-teal-500 font-bold font-sans text-center text-3xl">GET API - Posts Data</h1>
             <div className="flex flex-col justify-center items-center text-teal-500 overflow-auto py-8">
                 <Form
                     handleSubmit={handleSubmit}
@@ -59,20 +65,27 @@ function Posts() {
                     value2={value2}
                 />
             </div>
-            <div className="max-w-7xl mx-auto grid grid-cols-3 gap-4">
-                {check ?
-                    <p>Something Went Wrong</p> :
-                    posts.map((post) => {
-                        const { id, title, body } = post;
-                        return (
-                            <div className="p-2 border border-gray-400" key={id}>
-                                <h2 className="font-extrabold text-center text-white">{id} - {title.slice(0, 15)}</h2>
-                                <p className="italic text-justify text-teal-500">{body.slice(0, 150)}</p>
-                            </div>
-                        )
-                    })
-                }
-            </div>
+            {loading ? (
+                <div className="flex justify-center items-center h-screen">
+                    <DotLoader color="teal" size={50} loading={loading} />
+                </div>
+            ) : (
+                <div className="max-w-7xl mx-auto grid grid-cols-3 gap-4">
+                    {check ? (
+                        <p>Something Went Wrong</p>
+                    ) : (
+                        posts.map((post) => {
+                            const { id, title, body } = post;
+                            return (
+                                <div className="p-2 border border-gray-400" key={id}>
+                                    <h2 className="font-extrabold text-center text-white">{id} - {title.slice(0, 15)}</h2>
+                                    <p className="italic text-justify text-teal-500">{body.slice(0, 150)}</p>
+                                </div>
+                            )
+                        })
+                    )}
+                </div>
+            )}
             <Outlet />
         </div>
     )

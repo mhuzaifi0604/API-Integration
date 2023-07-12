@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 
@@ -12,7 +12,7 @@ function Todo() {
 
   const handlePostRequest = async () => {
     try {
-      setLoading(true);
+      
       const response = await axios.post('https://jsonplaceholder.typicode.com/posts', {
         title: title,
         body: body,
@@ -24,6 +24,7 @@ function Todo() {
       setTitle('');
       setBody('');
       setUserId('');
+      setLoading(false);
     } catch (error) {
       setPostData([]);
       setError('Error creating post');
